@@ -10,3 +10,4 @@ FetchContent_MakeAvailable(SFML)
 
 add_subdirectory(src/client)
 add_subdirectory(src/server)
+add_subdirectory(src/test)
