@@ -7,6 +7,7 @@ StateManager::StateManager(SharedContext* l_shared)
 	RegisterState<State_MainMenu>(StateType::MainMenu);
 	RegisterState<State_Game>(StateType::Game);
 	RegisterState<State_Paused>(StateType::Paused);
+	RegisterState<State_GameOver>(StateType::GameOver);
 }
 
 StateManager::~StateManager(){
@@ -38,17 +39,18 @@ void StateManager::Update(const sf::Time& l_time){
 
 void StateManager::Draw(){
 	if (m_states.empty()){ return; }
-	if (m_states.back().second->IsTransparent() && m_states.size() > 1){
+	if(m_states.back().second->IsTransparent() && m_states.size() > 1){
 		auto itr = m_states.end();
-		while (itr != m_states.begin()){
-			if (itr != m_states.end()){
-				if (!itr->second->IsTransparent()){
+		while(itr != m_states.begin()){
+			if(itr != m_states.end()){
+				if(!itr->second->IsTransparent()){
 					break;
 				}
 			}
 			--itr;
 		}
-		for (; itr != m_states.end(); ++itr){
+		for(; itr != m_states.end(); ++itr){
+			m_shared->m_wind->GetRenderWindow()->setView(itr->second->GetView());
 			itr->second->Draw();
 		}
 	} else {
@@ -90,6 +92,7 @@ void StateManager::SwitchTo(const StateType& l_type){
 			m_states.erase(itr);
 			m_states.emplace_back(tmp_type, tmp_state);
 			tmp_state->Activate();
+			m_shared->m_wind->GetRenderWindow()->setView(tmp_state->GetView());
 			return;
 		}
 	}
@@ -98,6 +101,7 @@ void StateManager::SwitchTo(const StateType& l_type){
 	if (!m_states.empty()){ m_states.back().second->Deactivate(); }
 	CreateState(l_type);
 	m_states.back().second->Activate();
+	m_shared->m_wind->GetRenderWindow()->setView(m_states.back().second->GetView());
 }
 
 void StateManager::Remove(const StateType& l_type){
@@ -110,6 +114,7 @@ void StateManager::CreateState(const StateType& l_type){
 	auto newState = m_stateFactory.find(l_type);
 	if (newState == m_stateFactory.end()){ return; }
 	BaseState* state = newState->second();
+	state->m_view = m_shared->m_wind->GetRenderWindow()->getDefaultView();
 	m_states.emplace_back(l_type, state);
 	state->OnCreate();
 }

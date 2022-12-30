@@ -22,13 +22,13 @@ set(INCROOT ${PROJECT_SOURCE_DIR})
 set(SRCROOT ${PROJECT_SOURCE_DIR})
 
 set(SRC
-    ${SRCROOT}/main.cpp
+    ${SRCROOT}/Main.cpp
     ${SRCROOT}/BaseState.h
     ${INCROOT}/Game.cpp
     ${INCROOT}/Game.h
     ${INCROOT}/EventManager.cpp
     ${INCROOT}/EventManager.h
-    ${INCROOT}/Sharedcontext.h
+    ${INCROOT}/SharedContext.h
     ${INCROOT}/State_Game.cpp
     ${INCROOT}/State_Game.h
     ${INCROOT}/State_Intro.cpp
@@ -37,15 +37,27 @@ set(SRC
     ${INCROOT}/State_MainMenu.h
     ${INCROOT}/State_Paused.cpp
     ${INCROOT}/State_Paused.h
+    ${INCROOT}/State_GameOver.cpp
+    ${INCROOT}/State_GameOver.h
     ${INCROOT}/StateManager.cpp
     ${INCROOT}/StateManager.h
     ${INCROOT}/Window.cpp
     ${INCROOT}/Window.h
-)
+    ${INCROOT}/Anim_Base.cpp
+    ${INCROOT}/Anim_Base.h
+    ${INCROOT}/Anim_Directional.cpp
+    ${INCROOT}/Anim_Directional.h
+    ${INCROOT}/ResourceManager.h
+    ${INCROOT}/SpriteSheet.cpp
+    ${INCROOT}/SpriteSheet.h
+    ${INCROOT}/TextureManager.h
+    ${INCROOT}/Utilities.h
+  )
+
 source_group("" FILES ${SRC})
 
 add_executable(${EXECUTABLE_NAME} ${SRC})
-target_link_libraries(${EXECUTABLE_NAME} PRIVATE sfml-graphics)
+target_link_libraries(${EXECUTABLE_NAME} PRIVATE sfml-graphics Shlwapi)
 target_compile_features(${EXECUTABLE_NAME} PRIVATE cxx_std_17)
 if (WIN32)
   set_target_properties(${EXECUTABLE_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/build")
